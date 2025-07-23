@@ -69,7 +69,7 @@ wellness_df['memberno'] = wellness_df['memberno'].astype(int).astype(str)
 
 filled_wellness_df['MemberNo'] = filled_wellness_df['MemberNo'].astype(str)
 
-st.subheader('Welcome to the AVON HMO Enrollee Annual Wellness Portal \nKindly note that you are only eligible to perform your Wellness check once in a policy year')
+st.subheader('Welcome to the AVON HMO Enrollee Annual Wellness Portal \nKindly note that you are only eligible to perform your Wellness check once within a policy year')
 
 #initialize session state to store user input
 if 'user_data' not in st.session_state:
