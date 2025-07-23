@@ -64,4 +64,4 @@ jobs:
         with:
           app-name: 'avonhmowellness'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1DAF334BDBF84CEB862B9CBFA2B40A5D }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE}}
