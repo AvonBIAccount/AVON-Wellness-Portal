@@ -12,7 +12,7 @@ import os
 st.set_page_config(layout='wide')
 
 image = Image.open('wellness_image_1.png')
-st.image(image, use_column_width=True)
+st.image(image, use_container_width=True)
 
 server = os.environ.get('server_name')
 database = os.environ.get('db_name')
@@ -33,8 +33,8 @@ conn = pyodbc.connect(
         + password
         )
 
-# login_username = st.secrets['login_username']
-# login_password = st.secrets['login_password']
+# # login_username = st.secrets['login_username']
+# # login_password = st.secrets['login_password']
 # conn = pyodbc.connect(
 #         'DRIVER={ODBC Driver 17 for SQL Server};SERVER='
 #         +st.secrets['server']
@@ -50,9 +50,9 @@ query1 = "SELECT * from vw_wellness_enrollee_portal_update"
 query2 = 'select MemberNo, MemberName, Client, email, state, selected_provider, Wellness_benefits, selected_date, selected_session, date_submitted\
             FROM tbl_annual_wellness_enrollee_data a\
             where a.PolicyEndDate = (select max(PolicyEndDate) from tbl_annual_wellness_enrollee_data b where a.MemberNo = b.MemberNo)'
-query3 = ' select a.CODE, a.STATE, PROVIDER_NAME, a.ADDRESS, PROVIDER, name\
+query3 = "select a.CODE, a.STATE, PROVIDER_NAME, a.ADDRESS,Provider_Name + ' - ' + Location as ProviderLoc, PROVIDER, name\
             from Updated_Wellness_Providers a\
-            join tbl_Providerlist_stg b on a.CODE = b.code'
+            join tbl_Providerlist_stg b on a.CODE = b.code"
 
 @st.cache_data(ttl = dt.timedelta(hours=4))
 def LOADING():
@@ -135,7 +135,7 @@ if 'user_data' not in st.session_state:
 # # Define selectbox options and their corresponding indices
 # state_options = ['ABIA', 'ABUJA', 'LAGOS', 'KANO', 'KADUNA', 'OGUN', 'OYO']
 # Get enrollee ID from URL query parameters
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 default_enrollee_id = query_params.get("member", [""])[0]  # "member" comes from ?member=12345
 enrollee_id = st.text_input('Please input your Member ID to confirm your eligibility', value=default_enrollee_id)
 #enrollee_id = st.text_input('Kindly input your Member ID to confirm your eligibility')
@@ -326,6 +326,9 @@ if enrollee_id:
         elif client == 'PETROSTUFF NIGERIA LIMITED':
             available_states = ['LAGOS', 'ABUJA', 'RIVERS']
             state = st.selectbox('Your Current Location', placeholder='Pick your Current State of Residence', index=None, options=available_states)
+        elif client == 'TRANSCORP HILTON HOTEL ABUJA':
+            available_states = ['ABUJA']
+            state = st.selectbox('Your Current Location', options=available_states)
         else:
             excluded_state = 'HQ'
             available_states = wellness_providers['STATE'].unique()
@@ -431,12 +434,26 @@ if enrollee_id:
                                               options=['BODY AFFAIRS DIAGNOSTICS - 1349, Ahmadu Bello Way, Garki 2, Abuja'
                                                        ])
         elif client == 'PETROSTUFF NIGERIA LIMITED' and state == 'RIVERS':
-            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None,
-                                              options=['PONYX HOSPITALS LTD - Plot 26, Presidential Estate, GRA Phase III, opp. NDDC H/Qrts, Port-Harcourt/Aba Expressway'
-                                                       ])
+            provider_options = [
+            'PONYX HOSPITALS LTD'
+            ]
+            provider_addresses = {
+            'PONYX HOSPITALS LTD': 'Plot 26, Presidential Estate, GRA Phase III, opp. NDDC H/Qrts, Port-Harcourt/Aba Expressway'
+            }
+            selected_provider_name = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=provider_options)
+            selected_provider = f"{selected_provider_name} - {provider_addresses[selected_provider_name]}" if selected_provider_name else ""
+        elif client == 'TRANSCORP HILTON HOTEL ABUJA' and state == 'ABUJA':
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', options=['TRANSCORP/E-CLINIC WELLNESS'])
         else:
-            available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
-            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+            available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'ProviderLoc'].unique()
+            select_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+            provider_match = wellness_providers.loc[wellness_providers['ProviderLoc'] == select_provider, 'PROVIDER'].values
+            if provider_match.size > 0:
+                selected_provider = provider_match[0]
+            else:
+                selected_provider = ""
+                # st.warning("No provider found for the selected facility. Please select another option.")
+ 
         
         if client == 'UNITED BANK FOR AFRICA' and age >= 40 and gender == 'Female':
             benefits = 'Physical Exam, Urinalysis, PCV, Blood Sugar, BP, Genotype, BMI, Chest X-Ray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test, Cervical Smear'
