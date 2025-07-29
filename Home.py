@@ -12,7 +12,7 @@ import os
 st.set_page_config(layout='wide')
 
 image = Image.open('wellness_image_1.png')
-st.image(image, use_container_width=True)
+st.image(image)
 
 server = os.environ.get('server_name')
 database = os.environ.get('db_name')
