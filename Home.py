@@ -14,37 +14,37 @@ st.set_page_config(layout='wide')
 image = Image.open('wellness_image_1.png')
 st.image(image)
 
-server = os.environ.get('server_name')
-database = os.environ.get('db_name')
-username = os.environ.get('db_username')
-password = os.environ.get('db_password')
-login_username = os.environ.get('userlogin')
-login_password = os.environ.get('login_password')
+# server = os.environ.get('server_name')
+# database = os.environ.get('db_name')
+# username = os.environ.get('db_username')
+# password = os.environ.get('db_password')
+# login_username = os.environ.get('userlogin')
+# login_password = os.environ.get('login_password')
 
 
-conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 17 for SQL Server};SERVER='
-        + server
-        +';DATABASE='
-        + database
-        +';UID='
-        + username
-        +';PWD='
-        + password
-        )
-
-# # login_username = st.secrets['login_username']
-# # login_password = st.secrets['login_password']
 # conn = pyodbc.connect(
 #         'DRIVER={ODBC Driver 17 for SQL Server};SERVER='
-#         +st.secrets['server']
+#         + server
 #         +';DATABASE='
-#         +st.secrets['database']
+#         + database
 #         +';UID='
-#         +st.secrets['username']
+#         + username
 #         +';PWD='
-#         +st.secrets['password']
+#         + password
 #         )
+
+# login_username = st.secrets['login_username']
+# login_password = st.secrets['login_password']
+conn = pyodbc.connect(
+        'DRIVER={ODBC Driver 17 for SQL Server};SERVER='
+        +st.secrets['server']
+        +';DATABASE='
+        +st.secrets['database']
+        +';UID='
+        +st.secrets['username']
+        +';PWD='
+        +st.secrets['password']
+        )
 
 query1 = "SELECT * from vw_wellness_enrollee_portal_update"
 query2 = 'select MemberNo, MemberName, Client, email, state, selected_provider, Wellness_benefits, selected_date, selected_session, date_submitted\
@@ -136,7 +136,7 @@ if 'user_data' not in st.session_state:
 # state_options = ['ABIA', 'ABUJA', 'LAGOS', 'KANO', 'KADUNA', 'OGUN', 'OYO']
 # Get enrollee ID from URL query parameters
 query_params = st.query_params
-default_enrollee_id = query_params.get("member", [""])[0]  # "member" comes from ?member=12345
+default_enrollee_id = query_params.get("member", "")  # "member" comes from ?member=12345
 enrollee_id = st.text_input('Please input your Member ID to confirm your eligibility', value=default_enrollee_id)
 #enrollee_id = st.text_input('Kindly input your Member ID to confirm your eligibility')
 
