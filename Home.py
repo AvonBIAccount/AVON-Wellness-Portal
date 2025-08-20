@@ -53,21 +53,25 @@ query2 = 'select MemberNo, MemberName, Client, email, state, selected_provider, 
 query3 = "select a.CODE, a.STATE, PROVIDER_NAME, a.ADDRESS,Provider_Name + ' - ' + Location as ProviderLoc, PROVIDER, name\
             from Updated_Wellness_Providers a\
             join tbl_Providerlist_stg b on a.CODE = b.code"
+query4 = 'select * from vw_loyaltybeneficiaries'
 
 @st.cache_data(ttl = dt.timedelta(hours=4))
 def LOADING():
     wellness_df = pd.read_sql(query1, conn)
     wellness_providers = pd.read_sql(query3, conn)
+    loyalty_beneficiaries = pd.read_sql(query4, conn)
     # conn.close()
-    return wellness_df, wellness_providers
+    return wellness_df, wellness_providers, loyalty_beneficiaries
 
-wellness_df, wellness_providers = LOADING()
+wellness_df, wellness_providers, loyalty_enrollees = LOADING()
 
 filled_wellness_df = pd.read_sql(query2, conn)
 
 wellness_df['memberno'] = wellness_df['memberno'].astype(int).astype(str)
 
 filled_wellness_df['MemberNo'] = filled_wellness_df['MemberNo'].astype(str)
+
+loyalty_enrollees['MemberNo'] = loyalty_enrollees['MemberNo'].astype(str)
 
 st.subheader('Welcome to the AVON HMO Enrollee Annual Wellness Portal \nKindly note that you are only eligible to perform your Wellness check once within a policy year')
 
@@ -128,12 +132,6 @@ if 'user_data' not in st.session_state:
         'resp_4_t': 'Never',     
     }
 
-# # Define radio options and their corresponding indices
-# job_type_options = ['Office Work', 'Field Work', 'Both', 'None']
-# job_type_indices = {option: index for index, option in enumerate(job_type_options)}
-
-# # Define selectbox options and their corresponding indices
-# state_options = ['ABIA', 'ABUJA', 'LAGOS', 'KANO', 'KADUNA', 'OGUN', 'OYO']
 # Get enrollee ID from URL query parameters
 query_params = st.query_params
 default_enrollee_id = query_params.get("member", "")  # "member" comes from ?member=12345
@@ -189,99 +187,7 @@ if enrollee_id:
                 f'###Note that your annual wellness is only valid till {six_weeks}.\n\n'
                 ,icon="✅")
         
-        # #check if the user is logged in
-        # if 'logged_in' not in st.session_state:
-        #     st.session_state.logged_in = False
-
-        # #Initialise form state
-        # if 'pacode' not in st.session_state:
-        #     st.session_state.pacode = ''
-        # if 'pa_tests' not in st.session_state:
-        #     st.session_state.pa_tests = []
-        # if 'pa_provider' not in st.session_state:
-        #     st.session_state.pa_provider = ''
-        # if 'pa_issue_date' not in st.session_state:
-        #     st.session_state.pa_issue_date = dt.date.today()
-
-        # #Login form in the sidebar
-        # if not st.session_state.logged_in:
-        #     #create a button to enable contact center agent fill in the details of the generated PA code
-        #     st.subheader('For Internal Use Only. Kindly Login to Access the PA Authorisation Page')
-        #     st.sidebar.title("PA Authorisation Page")
-        #     # st.sidebar.write("Login with your username and password to access the portal.")
-        #     username = st.sidebar.text_input("Username")
-        #     password = st.sidebar.text_input("Password", type="password")
-
-        # if st.sidebar.button("LOGIN"):
-        #     if username == login_username and password == login_password:
-        #         st.sidebar.success("Login Successful")
-        #         st.session_state.logged_in = True
-        #         st.experimental_rerun()
-        #     else:
-        #         st.error("Username/password is incorrect")
-
-        # #add a logout button
-        # else:
-        #     if st.sidebar.button("LOGOUT", help="Click to logout"):
-        #         st.session_state.logged_in = False
-        #         st.experimental_rerun()
-
-        # if st.session_state.logged_in:
-        #     st.write('Fill the details of the PA issued to Enrollee below to complete the wellness booking for the enrollee')
-
-        #     # with st.form(key='my_form'):
-        #     pacode = st.text_input('Input the Generated PA Code', value=st.session_state.pacode)
-        #     pa_tests = st.multiselect('Select the Tests Conducted', options=['Physical Exam', 'Urinalysis', 'PCV', 'Blood Sugar', 'BP', 'Genotype', 'BMI', 'ECG', 'Visual Acuity',
-        #                                                                         'Chest X-Ray', 'Cholesterol', 'Liver Function Test', 'Electrolyte, Urea and Creatinine Test(E/U/Cr)',
-        #                                                                         'Stool Microscopy', 'Mammogram', 'Prostrate Specific Antigen(PSA)', 'Cervical Smear', 'Stress ECG',
-        #                                                                         'Hepatitis B', 'Lipid Profile Test'],
-        #                                                                         default=st.session_state.pa_tests)
-        #     # Convert pa_tests list to a comma-separated string
-        #     pa_tests_str = ','.join(pa_tests)
-        #     wellness_providers = wellness_providers['name'].unique()
-        #     added_providers = ['MECURE HEALTHCARE, OSHODI', 'MECURE HEALTHCARE, LEKKI', 'CLINIX HEALTHCARE', 'TEEKAY HOSPITAL LIMITED']
-        #     wellness_providers = list(wellness_providers) + added_providers
-        #     pa_provider = st.selectbox('Select the Wellness Provider', placeholder = 'Select Provider', index = None, options = wellness_providers)
-        #     pa_issue_date = st.date_input('Select the Date the PA was Issued',value=st.session_state.pa_issue_date)
-
-        #     #add a submit button
-        #     proceed = st.button("PROCEED", help="Click to proceed")
-        #     if proceed:
-        #         #initialize an empty list to store empty fields
-        #         empty_fields = []
-        #         #check if any of the fields is empty
-        #         if pacode == '':
-        #             empty_fields.append('PA Code')
-        #         if len(pa_tests) == 0:
-        #             empty_fields.append('Tests Conducted')
-        #         if pa_provider == 'Select Provider':
-        #             empty_fields.append('Provider')
-        #         #check the content of the empty_fields list and display the appropriate message
-        #         if len(empty_fields) > 0:
-        #             st.error(f'Please fill the following field(s): {", ".join(empty_fields)}')
-        #         else:
-        #             #insert the generated PA code into the tbl_annual_wellness_enrollee_data on the database
-        #             cursor = conn.cursor()
-        #             query = """
-        #             UPDATE tbl_annual_wellness_enrollee_data
-        #             SET IssuedPACode = ?, PA_Tests = ?, PA_Provider = ?, PAIssueDate = ?
-        #             WHERE MemberNo = ? and date_submitted = (select max(date_submitted) from tbl_annual_wellness_enrollee_data where MemberNo = ?)
-        #             """
-        #             cursor.execute(query, pacode, pa_tests_str, pa_provider, pa_issue_date, enrollee_id, enrollee_id)
-        #             conn.commit()
-        #             st.success('PA Code has been successfully updated for the enrollee')
-
-        #             #clear the form fields
-        #             st.session_state.form_submitted = True
-        #             st.session_state.pacode = ''
-        #             st.session_state.pa_tests = []
-        #             st.session_state.pa_provider = ''
-        #             st.session_state.pa_issue_date = dt.date.today()
-        #             st.experimental_rerun()
-
-        #     # if 'form_submitted' in st.session_state:
-        #     #     if st.session_state.form_submitted:
-        #     #         st.session_state.form_submitted = False
+        
 
     elif (enrollee_id in wellness_df['memberno'].values) & (final_submit_date is None or final_submit_date <= policystart):
         enrollee_name = wellness_df.loc[wellness_df['memberno'] == enrollee_id, 'membername'].values[0]
@@ -311,8 +217,14 @@ if enrollee_id:
         email = st.text_input('Input a Valid Email Address', st.session_state.user_data['email'])
         mobile_num = st.text_input('Input a Valid Mobile Number', st.session_state.user_data['mobile_num'])
         gender = st.radio('Sex', options=['Male', 'Female'], index=['Male', 'Female'].index(st.session_state.user_data['gender']))
-        job_type = st.selectbox('Occupation Type', placeholder='Pick your Work Category', index=None, options=['Mainly Desk Work', 'Mainly Field Work', 'Desk and Field Work', 'Physical Outdoor Work', 'Physical Indoor Work'])
-        # age = st.number_input('Your Current Age', value=st.session_state.user_data['age']
+
+        #add a branching to show different job types for TOTAL ENERGIES MANAGED CARE PLAN and other policies
+        if policy == 'TOTAL ENERGIES MANAGED CARE PLAN':
+            job_type = st.selectbox('Nature of Work', placeholder='Select your Work Category', index=None, options=['Offshore Personnel', 'Fire Team', 'MERT', 'Lab Personnel', 'Admin and Others'])
+        else:
+            job_type = st.selectbox('Occupation Type', placeholder='Pick your Work Category', index=None, options=['Mainly Desk Work', 'Mainly Field Work', 'Desk and Field Work', 'Physical Outdoor Work', 'Physical Indoor Work'])
+        
+        
         if client == 'UNITED BANK FOR AFRICA':
             excluded_state = 'HQ'
             available_states = wellness_providers['STATE'].unique()
@@ -340,11 +252,6 @@ if enrollee_id:
         #convert the sterling_bank_enrollees list to a string
         sterling_bank_enrollees = [str(i) for i in sterling_bank_enrollees]
 
-        # if client == 'UNITED BANK FOR AFRICA' and state == 'LAGOS':
-        #     available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
-        #     additional_provider = 'UBA Head Office (CERBA Onsite) - Marina, Lagos Island'
-        #     available_provider = list(available_provider) + [additional_provider]
-        #     selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
         if client == 'UNITED BANK FOR AFRICA' and state == 'UBA HQ':
             available_provider = ['UBA Head Office (CERBA Onsite) - Marina, Lagos Island']
             selected_provider = st.selectbox('Pick your Preferred Wellness Facility',placeholder='Select a Provider', index=None, options=available_provider)
@@ -471,7 +378,21 @@ if enrollee_id:
         #create a different benefits for specific sterling bank enrollees based on their enrollee_id
         elif enrollee_id in sterling_bank_enrollees:
             benefits = 'Physical Exam, BP, Blood Sugar, Urinalysis, Chest X-Ray, Stool Microscopy, Cholesterol, Prostate Specific Antigen(PSA)'
-        #create a different benefits package for etranzact enrollees based on their gender and age
+        
+        #create a different benefits for the customer experience loyalty reward
+        elif enrollee_id in loyalty_enrollees['MemberNo'].values:
+            benefits = (loyalty_enrollees.loc[loyalty_enrollees['MemberNo'] == enrollee_id, 'Eligible Services'].values[0] 
+                        + "\nAdditional Test: " 
+                        + loyalty_enrollees.loc[loyalty_enrollees['MemberNo'] == enrollee_id, 'Additional Services'].values[0]
+                        )
+            #create a different benefits package for etranzact enrollees based on their gender and age
+        elif policy == 'TOTAL ENERGIES MANAGED CARE PLAN':
+            if job_type == 'Offshore Personnel':
+                benefits = 'Complete physical examination, Urinalysis, Fasting Blood Sugar, FBC, Lipid Profile, E/U/Cr, CRP, Liver Function test, Resting ECG, Audiometry, Chest X-ray indicated only at examiners request'
+            elif job_type in ('Fire Team', 'MERT', 'Lab Personnel'):
+                benefits = 'Complete physical examination, Urinalysis, Fasting Blood Sugar, FBC, Lipid Profile, E/U/Cr, CRP, Liver Function test, Resting ECG, Spirometry, Chest X-ray indicated only at examiners request'
+            else:
+                benefits = 'Complete physical examination, Urinalysis, Fasting Blood Sugar, FBC, Lipid Profile, E/U/Cr, CRP, Liver Function test, Resting ECG'
         elif client == 'ETRANZACT':
             if policy not in ('PLUS PLAN 2019', 'ETRANZACT PLUS PLAN NEW'):
                 if age > 40 and gender == 'Male':
@@ -484,6 +405,7 @@ if enrollee_id:
                     benefits = 'Physical Examination, Blood Pressure Check, Fasting Blood Sugar, Stool Microscopy, BMI, Urinalysis, Cholesterol, Genotype, Packed Cell Volume, Chest X-Ray, ECG, Liver Function Test, E/U/Cr'
             else:
                 benefits = package
+        # elif memberno
         else:
             benefits = package
 
