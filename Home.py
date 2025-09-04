@@ -195,6 +195,7 @@ if enrollee_id:
         policy = wellness_df.loc[wellness_df['memberno'] == enrollee_id, 'PolicyName'].values[0]
         package = wellness_df.loc[wellness_df['memberno'] == enrollee_id, 'WellnessPackage'].values[0]
         age = int(wellness_df.loc[wellness_df['memberno'] == enrollee_id, 'Age'].values[0])
+        relation = wellness_df.loc[wellness_df['memberno'] == enrollee_id, 'Relation'].values[0]
 
         # st.write(wellness_providers.loc[wellness_providers['STATE'] == 'SOKOTO', 'PROVIDER'].unique())
 
@@ -292,16 +293,16 @@ if enrollee_id:
             additional_provider = 'AMAZING GRACE HOSPITAL - 7, Iloro Street, Ijebu-Ode, Ogun State'
             available_provider = list(available_provider) + [additional_provider]
             selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
-        elif (client == 'HEIRS HOLDINGS' or enrollee_id == str(164386)) and state == 'LAGOS':
-            available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
-            additional_provider = 'AVON Medical - Onsite'
-            available_provider = list(available_provider) + [additional_provider]
-            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
-        elif client == 'TRANSCORP PLC' and state == 'LAGOS':
-            available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
-            additional_provider = 'AVON Medical - Onsite'
-            available_provider = list(available_provider) + [additional_provider]
-            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+        elif (client in ['HEIRS HOLDINGS', 'TRANSCORP PLC', 'TONY ELUMELU FOUNDATION']) and state == 'LAGOS' and relation in ['MEMBER', 'FEMALE MEMBER', 'MALE MEMBER']:
+            # available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
+            available_provider = 'AVON Medical - Onsite'
+            # available_provider = list(available_provider) + [additional_provider]
+            selected_provider = st.selectbox('Assigned Wellness Facility', options=available_provider)
+        # elif client == 'TRANSCORP PLC' and state == 'LAGOS':
+        #     available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
+        #     additional_provider = 'AVON Medical - Onsite'
+        #     available_provider = list(available_provider) + [additional_provider]
+        #     selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
         elif client == 'AFRILAND PROPERTIES PLC' and state == 'LAGOS':
             available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
             additional_provider = 'AVON Medical - Onsite'
