@@ -295,7 +295,7 @@ if enrollee_id:
             selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
         elif (client in ['HEIRS HOLDINGS', 'TRANSCORP PLC', 'TONY ELUMELU FOUNDATION']) and state == 'LAGOS' and relation in ['MEMBER', 'FEMALE MEMBER', 'MALE MEMBER']:
             # available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'PROVIDER'].unique()
-            available_provider = 'AVON Medical - Onsite'
+            available_provider = ['AVON Medical - Onsite']
             # available_provider = list(available_provider) + [additional_provider]
             selected_provider = st.selectbox('Assigned Wellness Facility', options=available_provider)
         # elif client == 'TRANSCORP PLC' and state == 'LAGOS':
