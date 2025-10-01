@@ -18,8 +18,6 @@ server = os.environ.get('server_name')
 database = os.environ.get('db_name')
 username = os.environ.get('db_username')
 password = os.environ.get('db_password')
-login_username = os.environ.get('userlogin')
-login_password = os.environ.get('login_password')
 
 
 conn = pyodbc.connect(
@@ -33,8 +31,7 @@ conn = pyodbc.connect(
         + password
         )
 
-# login_username = st.secrets['login_username']
-# login_password = st.secrets['login_password']
+
 # conn = pyodbc.connect(
 #         'DRIVER={ODBC Driver 17 for SQL Server};SERVER='
 #         +st.secrets['server']
@@ -75,6 +72,7 @@ loyalty_enrollees['MemberNo'] = loyalty_enrollees['MemberNo'].astype(str)
 
 st.subheader('Welcome to the AVON HMO Enrollee Annual Wellness Portal \nKindly note that you are only eligible to perform your Wellness check once within a policy year')
 
+ladol_special = pd.read_csv('Ladol Special Wellness.csv')
 #initialize session state to store user input
 if 'user_data' not in st.session_state:
     st.session_state.user_data = {
@@ -394,6 +392,7 @@ if enrollee_id:
                 benefits = 'Complete physical examination, Urinalysis, Fasting Blood Sugar, FBC, Lipid Profile, E/U/Cr, CRP, Liver Function test, Resting ECG, Spirometry, Chest X-ray indicated only at examiners request'
             else:
                 benefits = 'Complete physical examination, Urinalysis, Fasting Blood Sugar, FBC, Lipid Profile, E/U/Cr, CRP, Liver Function test, Resting ECG'
+        # elif 
         elif client == 'ETRANZACT':
             if policy not in ('PLUS PLAN 2019', 'ETRANZACT PLUS PLAN NEW'):
                 if age > 40 and gender == 'Male':
@@ -406,7 +405,8 @@ if enrollee_id:
                     benefits = 'Physical Examination, Blood Pressure Check, Fasting Blood Sugar, Stool Microscopy, BMI, Urinalysis, Cholesterol, Genotype, Packed Cell Volume, Chest X-Ray, ECG, Liver Function Test, E/U/Cr'
             else:
                 benefits = package
-        # elif memberno
+        elif client == 'LADOL' and enrollee_id in ladol_special['MemberNo'].astype(str).values:
+            benefits = ladol_special.loc[ladol_special['MemberNo'].astype(str) == enrollee_id, 'Eligible Tests'].values[0]
         else:
             benefits = package
 
