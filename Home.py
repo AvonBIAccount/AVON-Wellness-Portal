@@ -181,6 +181,7 @@ if enrollee_id:
                 f'Wellness Facility: {provider}.\n\n'
                 f'Wellness Benefits: {package}.\n\n'
                 f'Appointment Date: {app_date} - {app_session}.\n\n'
+                f'Kindly note that your wellness result will only be available two (2) weeks after your visit to the provider for your wellness test.\n\n'
                 f'Kindly contact your Client Manager if you wish change your booking appointment/wellness center.\n\n'
                 f'###Note that your annual wellness is only valid till {six_weeks}.\n\n'
                 ,icon="✅")
@@ -937,6 +938,8 @@ if enrollee_id:
                     Your results will be strictly confidential and will be sent to you directly via your email. You are advised to review
                     your results with your primary care provider for relevant medical advice.<br><br>
 
+                    <b>Kindly note that your wellness result will only be available two (2) weeks after your visit to the provider for your wellness check.</b><br><br>
+
                     Should you require assistance at any time or wish to make any complaint about the service at any of the facilities, 
                     please contact our Call-Center at 0700-277-9800  or send us a chat on WhatsApp at 0912-603-9532. 
                     You can also send us an email at callcentre@avonhealthcare.com. Please be assured that an agent would always be on standby to assist you.<br><br>
@@ -959,6 +962,8 @@ if enrollee_id:
                     
                     Your results will be strictly confidential and will be sent to you directly via your email. You are advised to review
                     your results with your primary care provider for relevant medical advice.<br><br>
+
+                    <b>Kindly note that your wellness result will only be available two (2) weeks after your visit to the provider for your wellness check.</b><br><br>
 
                     Should you require assistance at any time or wish to make any complaint about the service at any of the facilities, 
                     please contact our Call-Center at 0700-277-9800  or send us a chat on WhatsApp at 0912-603-9532. 
@@ -999,6 +1004,8 @@ if enrollee_id:
                     
                     Your results will be strictly confidential and will be sent to you directly via your email. You are advised to review
                     your results with your primary care provider for relevant medical advice.<br><br>
+
+                    <b>Kindly note that your wellness result will only be available two (2) weeks after your visit to the provider for your wellness check.</b><br><br>
 
                     Should you require assistance at any time or wish to make any complaint about the service at any of the facilities, 
                     please contact our Call-Center at 0700-277-9800  or send us a chat on WhatsApp at 0912-603-9532. 
@@ -1127,7 +1134,8 @@ if enrollee_id:
                         server.sendmail(myemail, all_recipients, msg.as_string())
                         server.quit()
 
-                        st.success('A confirmation Email has been sent to your provided email')
+                        st.success(f'A confirmation Email has been sent to your provided email\n\n'
+                                   f'Kindly note that your wellness result will only be available two (2) weeks after your visit to the provider for your wellness check.')
                     except Exception as e:
                         st.error(f'An error occurred: {e}')
        
