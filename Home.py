@@ -229,9 +229,9 @@ if enrollee_id:
             excluded_state = 'HQ'
             available_states = wellness_providers['STATE'].unique()
             available_states = [state for state in available_states if state != excluded_state]
-            add_state = 'UBA HQ'
-            add_state = list(available_states) + [add_state]
-            state = st.selectbox('Your Current Location', placeholder='Pick your Current State of Residence', index=None, options=add_state)
+            # add_state = 'UBA HQ'
+            # add_state = list(available_states) + [add_state]
+            state = st.selectbox('Your Current Location', placeholder='Pick your Current State of Residence', index=None, options=available_states)
         elif client == 'VERTEVILLE ENERGY':
             available_states = ['LAGOS', 'BORNO', 'DELTA', 'RIVERS']
             state = st.selectbox('Your Current Location', placeholder='Pick your Current State of Residence', index=None, options=available_states)
