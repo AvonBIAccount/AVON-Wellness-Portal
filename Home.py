@@ -362,18 +362,20 @@ if enrollee_id:
                 # st.warning("No provider found for the selected facility. Please select another option.")
  
         
-        if client == 'UNITED BANK FOR AFRICA' and age >= 40 and gender == 'Female':
-            benefits = 'Physical Exam, Urinalysis, PCV, Blood Sugar, BP, Genotype, BMI, Chest X-Ray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test, Cervical Smear'
-        elif client == 'UNITED BANK FOR AFRICA' and age >= 40 and gender == 'Male':
-            benefits = 'Physical Exam, Urinalysis, PCV, Blood Sugar, BP, Genotype, BMI, Chest X-Ray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test, Prostrate Specific Antigen'
-        elif client == 'UNITED BANK FOR AFRICA' and age < 40:
-            benefits = 'Physical Exam, Urinalysis, PCV, Blood Sugar, BP, Genotype, BMI, Chest X-Rray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test'
-        elif client == 'PETROSTUFF NIGERIA LIMITED' and policy == 'PLUS PLAN 2019':
-            benefits = 'Physical Examination, BP, BMI, Blood Sugar, Urinalysis, Genotype, Cholesterol, Mantoux/TB Test, Chest X-ray, Full Blood Count, Liver Function Test, Lipid Profile, Stool Microscopy, ECG, Hepatitis B Screening, HIV Screening, E/U/Cr'
-        elif client == 'PETROSTUFF NIGERIA LIMITED' and policy == 'PRESTIGE PLAN 2019':
-            benefits = 'Physical Examination, BP, BMI, Blood Sugar, Urinalysis, Genotype, Cholesterol, Mantoux/TB Test, Chest X-ray, Full Blood Count, Liver Function Test, Lipid Profile, Stool Microscopy, ECG, Hepatitis B Screening, HIV Screening, E/U/Cr, PSA Men 40+'
-        elif client == 'PETROSTUFF NIGERIA LIMITED' and policy == 'PRESTIGE PLUS PLAN 2019':
-            benefits = 'Physical Examination, BP, BMI, Blood Sugar, Urinalysis, Genotype, Cholesterol, Mantoux/TB Test, Chest X-ray, Full Blood Count, Liver Function Test, Lipid Profile, Stool Microscopy, ECG, Hepatitis B Screening, HIV Screening, E/U/Cr, PSA Men 40+'
+        if client == 'UNITED BANK FOR AFRICA':
+            if age >= 30 and gender == 'Female':
+                benefits = 'Physical Exam, Blood Pressure Check, Fasting Blood Sugar, BMI, Urinalysis, Cholesterol, Genotype, Chest X-Ray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test(E/U/Cr), Packed Cell Volume(PCV), ECG, Visual Acuity, Mantoux Test, Cervical Smear, Mammogram'
+            elif age >= 40 and gender == 'Male':
+                benefits = 'Physical Exam, Blood Pressure Check, Fasting Blood Sugar, BMI, Urinalysis, Cholesterol, Genotype, Chest X-Ray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test(E/U/Cr), Packed Cell Volume(PCV), ECG, Visual Acuity, Mantoux Test, Prostrate Specific Antigen'
+            else:
+                benefits = 'Physical Exam, Blood Pressure Check, Fasting Blood Sugar, BMI, Urinalysis, Cholesterol, Genotype, Chest X-Ray, Cholesterol, Liver Function Test, Electrolyte,Urea and Creatinine Test(E/U/Cr), Packed Cell Volume(PCV), ECG, Visual Acuity, Mantoux Test'
+        
+        # elif client == 'PETROSTUFF NIGERIA LIMITED' and policy == 'PLUS PLAN 2019':
+        #     benefits = 'Physical Examination, BP, BMI, Blood Sugar, Urinalysis, Genotype, Cholesterol, Mantoux/TB Test, Chest X-ray, Full Blood Count, Liver Function Test, Lipid Profile, Stool Microscopy, ECG, Hepatitis B Screening, HIV Screening, E/U/Cr'
+        # elif client == 'PETROSTUFF NIGERIA LIMITED' and policy == 'PRESTIGE PLAN 2019':
+        #     benefits = 'Physical Examination, BP, BMI, Blood Sugar, Urinalysis, Genotype, Cholesterol, Mantoux/TB Test, Chest X-ray, Full Blood Count, Liver Function Test, Lipid Profile, Stool Microscopy, ECG, Hepatitis B Screening, HIV Screening, E/U/Cr, PSA Men 40+'
+        # elif client == 'PETROSTUFF NIGERIA LIMITED' and policy == 'PRESTIGE PLUS PLAN 2019':
+        #     benefits = 'Physical Examination, BP, BMI, Blood Sugar, Urinalysis, Genotype, Cholesterol, Mantoux/TB Test, Chest X-ray, Full Blood Count, Liver Function Test, Lipid Profile, Stool Microscopy, ECG, Hepatitis B Screening, HIV Screening, E/U/Cr, PSA Men 40+'
         
         #create a different benefits for specific sterling bank enrollees based on their enrollee_id
         elif enrollee_id in sterling_bank_enrollees:
