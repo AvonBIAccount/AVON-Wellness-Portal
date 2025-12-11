@@ -203,11 +203,26 @@ if enrollee_id:
         #convert six_weeks to this date format e.g Wednesday, 31st December 2021
         six_weeks = six_week_dt.strftime('%A, %d %B %Y')
         
-        st.info(f'Dear {enrollee_name}.\n\n'
-                f'Kindly confirm that your enrollment details matches with the info displayed below.\n\n'
-                f'By proceeding to fill the form below, I understand and hereby acknowledge that my data would be collected and processed only for the performance of this wellness screening exercise.\n\n'
-                f'### Please note that once you complete this form, you only have till {six_weeks} to complete your wellness check.',icon="✅")
-        st.info(f'Company: {client}.\n\n Policy: {policy}.\n\n Policy End Date: {policyend}.\n\n Please contact your Client Manager if this information does not match with your enrollment details')
+        st.markdown(
+            f"""
+            Dear {enrollee_name}.<br><br>
+
+            <b style="color: purple;">
+                Kindly confirm that your enrollment details match the info displayed below.<br><br>
+                Also note that by proceeding to fill this form, you consent to the collection and processing of your data for the purpose of this wellness screening exercise.<br>
+                You understand that your results may be shared with the HMO for claims management and care coordination, 
+                and that your data will be handled in accordance with Avon HMO’s Privacy Policy.
+            </b><br><br>
+
+            <b>Please note that once you complete this form, you only have till {six_weeks} to complete your wellness check.</b>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.info(
+            f'Company: {client}.\n\n Policy: {policy}.\n\n Policy End Date: {policyend}.\n\n '
+            f'Please contact your Client Manager if this information does not match your enrollment details.'
+        )
 
         # #add a submit button
         # proceed = st.button("PROCEED", help="Click to proceed")
