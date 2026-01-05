@@ -444,7 +444,7 @@ if enrollee_id:
                 # Display a date picker
                 selected_date = st.date_input("Select Your Preferred Appointment Date", min_value=current_date,max_value=max_date)
         else:
-            max_date = dt.date(2025, 12, 31)
+            max_date = dt.date(2027, 12, 31)
             selected_date = st.date_input('Pick Your Preferred Appointment Date',max_value=max_date)
 
 
