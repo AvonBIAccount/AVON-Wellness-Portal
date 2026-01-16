@@ -256,6 +256,9 @@ if enrollee_id:
         elif client == 'TRANSCORP HILTON HOTEL ABUJA':
             available_states = ['ABUJA']
             state = st.selectbox('Your Current Location', options=available_states)
+        elif client == 'REX INSURANCE LTD':
+            available_states = ['LAGOS', 'RIVERS', 'DELTA', 'OYO', 'KADUNA', 'KANO']
+            state = st.selectbox('Your Current Location', placeholder='Pick your Current State of Residence', index=None, options=available_states)
         else:
             excluded_state = 'HQ'
             available_states = wellness_providers['STATE'].unique()
@@ -366,6 +369,26 @@ if enrollee_id:
             selected_provider = f"{selected_provider_name} - {provider_addresses[selected_provider_name]}" if selected_provider_name else ""
         elif client == 'TRANSCORP HILTON HOTEL ABUJA' and state == 'ABUJA':
             selected_provider = st.selectbox('Pick your Preferred Wellness Facility', options=['TRANSCORP/E-CLINIC WELLNESS'])
+
+        #CUSTOMISED BRANCHING FOR REX INSURANCE LTD
+        elif client == 'REX INSURANCE LTD' and state == 'LAGOS':
+            available_provider = ['AFRIGLOBAL MEDICARE DIAGNOSTIC CENTRE - Plot 1192A Kasumu Ekemode St, Victoria Island, Lagos', 'CLINIX HEALTHCARE - Plot B, BLKXII, Alhaji Adejumo Avenue, Ilupeju, Lagos']
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+        elif client == 'REX INSURANCE LTD' and state == 'RIVERS':
+            available_provider = ['PONYX HOSPITALS LTD - Plot 26, Presidential Estate, GRA Phase III, opp. NDDC H/Qrts, Port-Harcourt/Aba Expressway']
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+        elif client == 'REX INSURANCE LTD' and state == 'DELTA':
+            available_provider = ['ECHOLAB - 375B Nnebisi Road, Umuagu, Asaba, Delta']
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+        elif client == 'REX INSURANCE LTD' and state == 'OYO':
+            available_provider = ['BEACONHEALTH - 1, C.S Ola Street, Opposite Boldlink Ltd, Henry Tee Bus Stop, Ring Road, Ibadan']
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+        elif client == 'REX INSURANCE LTD' and state == 'KADUNA':
+            available_provider = ['HARMONY HOSPITAL LTD - 74, Narayi Road, Barnawa, Kaduna']
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
+        elif client == 'REX INSURANCE LTD' and state == 'KANO':
+            available_provider = ['RAYSCAN DIAGNOSTICS LTD - Plot 4 Gyadi Court Road, Kano']
+            selected_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
         else:
             available_provider = wellness_providers.loc[wellness_providers['STATE'] == state, 'ProviderLoc'].unique()
             select_provider = st.selectbox('Pick your Preferred Wellness Facility', placeholder='Select a Provider', index=None, options=available_provider)
